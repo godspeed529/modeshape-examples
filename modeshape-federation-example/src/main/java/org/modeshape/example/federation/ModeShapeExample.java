@@ -20,15 +20,18 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Repository;
 import javax.jcr.Session;
+
 import org.modeshape.common.collection.Problems;
 import org.modeshape.common.util.FileUtil;
 import org.modeshape.common.util.IoUtil;
 import org.modeshape.jcr.ModeShapeEngine;
 import org.modeshape.jcr.RepositoryConfiguration;
+import org.picketbox.factories.SecurityFactory;
 
 public class ModeShapeExample {
 
@@ -64,8 +67,8 @@ public class ModeShapeExample {
 
         Session session = null;
         try {
-            //create some files on the file system
-            File folder = prepareFS();
+			// setup some global Picketbox state
+			SecurityFactory.prepare();
 
             // Get the repository
             repository = engine.getRepository(repositoryName);
@@ -79,8 +82,8 @@ public class ModeShapeExample {
             String workspaceName = session.getWorkspace().getName();
             System.out.println("Found the root node in the \"" + workspaceName + "\" workspace");
 
-            Node rootFolder = session.getNode("/rootFolder");
-            System.out.println("/rootFolder (projection root)");
+			Node rootFolder = session.getNode("/cmis");
+			System.out.println("/cmis (projection root)");
 
             NodeIterator childIterator = rootFolder.getNodes();
             while (childIterator.hasNext()) {
@@ -92,9 +95,6 @@ public class ModeShapeExample {
             }
 
             session.save();
-
-            System.out.println(
-                    "Stored some custom properties in json files, checkout the " + folder.getAbsolutePath() + " folder");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

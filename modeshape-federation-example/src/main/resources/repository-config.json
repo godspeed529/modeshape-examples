@@ -9,7 +9,12 @@
         "anonymous" : {
             "roles" : ["readonly","readwrite","admin"],
             "useOnFailedLogin" : false
-        }
+        },
+        "providers" : [
+            {
+                "classname" : "org.modeshape.example.federation.PicketBoxSecurityProvider"
+            }
+        ]
     },
     "storage" : {
         "binaryStorage" : {
@@ -19,14 +24,23 @@
         }
     },
     "externalSources" : {
-        "target-fs" : {
-            "classname" : "filesystem",
-            "directoryPath" : "target/files",
-            "extraPropertiesStorage" : "json",
-            "projections" : [
-                "default:/rootFolder => /"
-            ]
+    	"cmis" : {
+			"classname" : "org.modeshape.connector.cmis.CmisConnector",
+			"aclService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"discoveryService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"multifilingService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"navigationService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"objectService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"policyService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"relationshipService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"repositoryService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"versioningService" : "http://localhost:8080/modeshape-cmis/services/cmis?wsdl",
+			"repositoryId" : "artifacts",
+			"authenticationType" : "org.modeshape.connector.cmis.authentication.http.basic",
+			"authenticationHttpBasicUser" : "cmis",
+			"authenticationHttpBasicPassword" : "Cm!$",
+			"projections" : [ "default:/cmis => /" ]
         }
-    } ,
+    },
     "node-types" : ["any-properties.cnd"]
 }
